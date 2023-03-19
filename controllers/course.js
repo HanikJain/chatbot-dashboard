@@ -16,8 +16,8 @@ const dataFinder = (type, req) => {
                 totalRatings: req.body.totalRatings,
             }
 
-        default:
-            break;
+        case "OPTION": 
+            return req.body.optionData;  
     }
 }
 

@@ -6,10 +6,14 @@ import Form from "react-bootstrap/Form";
 import Modal from "react-bootstrap/Modal";
 import { useDispatch, useSelector } from "react-redux";
 import { addDataActions } from "../../store/addData";
+
+
 import useHttp from "../../hooks/use-http";
+import useValidate from "../../hooks/validate";
 
 import TextForm from "../UI/TextForm";
 import CardForm from "../UI/CardForm";
+import OptionForm from "../UI/OptionForm.jsx";
 
 export default function Add() {
   const { isLoading, error, sendRequest } = useHttp();
@@ -21,8 +25,9 @@ export default function Add() {
   const [show, setShow] = useState(false);
   const [keywordInValid, setKeywordInValid] = useState(false);
   const [submit, setSubmit] = useState(false);
-  const [form, setForm] = useState(<TextForm />);
+  const [form, setForm] = useState(<OptionForm />);
   const typeRef = useRef();
+  const [validate] = useValidate();
 
   useEffect(() => {
     switch (type) {
@@ -32,7 +37,10 @@ export default function Add() {
 
       case "CARD":
         setForm(<CardForm />);
+        break;
 
+      case "OPTION":
+        setForm(<OptionForm />);
         break;
 
       default:
@@ -47,37 +55,15 @@ export default function Add() {
         method: "POST",
       };
 
-      switch (data.type) {
-        case "TEXT":
-          requestConfig.body = {
-            type: data.type,
-            keyword: data.keyword.trim(),
-            text: data.textData.text,
-          };
-
-          break;
-
-        case "CARD":
-          requestConfig.body = {
-            type: data.type,
-            keyword: data.keyword.trim(),
-            name: data.cardData.name,
-            description: data.cardData.description,
-            price: data.cardData.price,
-            rating: data.cardData.rating,
-            totalRatings: data.cardData.totalRatings,
-          };
-
-          break;
-
-        default:
-          break;
+      const response = validate(data);
+      if (response !== undefined) {
+        requestConfig.body = structuredClone(response);
+        sendRequest(requestConfig, dataInsertHandler);
       }
-
-      sendRequest(requestConfig, dataInsertHandler);
       setSubmit(false);
     }
-  }, [submit, sendRequest, data, dataInsertHandler]);
+
+  }, [submit, sendRequest, data, dataInsertHandler, validate]);
 
   function dataInsertHandler(data) {
     console.log(data);
@@ -94,7 +80,7 @@ export default function Add() {
 
   function clickHandler() {
     setShow(true);
-    dispatch(addDataActions.setAddType("TEXT"));
+    dispatch(addDataActions.setAddType("OPTION"));
   }
 
   function keywordChangeHandler(e) {
@@ -125,14 +111,15 @@ export default function Add() {
     dispatch(addDataActions.setAddType(typeRef.current.value));
   }
 
+
+
   return (
     <>
       <button
         onClick={clickHandler}
         className={`${styles.btn} btn btn-primary`}
       >
-        {" "}
-        +{" "}
+        +
       </button>
 
       <Modal show={show} onHide={handleClose}>
@@ -160,6 +147,7 @@ export default function Add() {
               onChange={typeChangeHandler}
               ref={typeRef}
             >
+              <option value="OPTION"> Option </option>
               <option value="TEXT"> Text </option>
               <option value="CARD"> Card </option>
             </Form.Select>
@@ -167,16 +155,19 @@ export default function Add() {
             <br />
 
             {form}
+
+            <br />
+
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={handleClose}>
-            {" "}
-            Close{" "}
+
+            Close
           </Button>
           <Button variant="primary" onClick={handleSubmitForm}>
-            {" "}
-            Save Changes{" "}
+
+            Save Changes
           </Button>
         </Modal.Footer>
       </Modal>

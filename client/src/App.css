@@ -1,0 +1,22 @@
+.zIndex10000 {
+    z-index: 10000;
+}
+
+.alertStyle{
+    max-width: 300px;
+    position: relative;
+    left: 33%
+} 
+
+@media (max-width: 468px) {
+    .alertStyle{
+        left: 7%
+    } 
+}
+
+
+@media (max-width: 767px ) and (min-width: 468px) {
+    .alertStyle{
+        left: 15%
+    } 
+}

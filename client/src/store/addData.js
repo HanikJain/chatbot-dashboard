@@ -9,12 +9,25 @@ const cardData = {
     totalRatings: '',
 };
 
+
+const optionData = {
+        count: 0,
+        parentId: '0',
+        addDisabled: false,
+        checked: false,
+        optionExists: false,
+        sr_no:'0'
+      
+    }
+    
 const initialState = {
-    type: 'TEXT',
+    type: 'OPTION',
     keyword: '',
     textData,
-    cardData
+    cardData,
+    optionData
 }
+
 
 const addDataSlice = createSlice({
     name: 'addData',
@@ -56,11 +69,17 @@ const addDataSlice = createSlice({
             state.type = action.payload;
         },
 
+        setAddOption(state, action) {
+            state.optionData = action.payload;
+        },
+
+
         clearMessage(state) {
             state.keyword = "";
-            state.type = "TEXT";
+            state.type = "OPTION";
             state.textData = textData;
             state.cardData = cardData;
+            state.optionData = optionData;
         }
     }
 });

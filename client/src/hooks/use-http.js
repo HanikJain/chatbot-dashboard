@@ -23,11 +23,11 @@ export default function useHttp() {
 
             if (!response.ok) {
                 throw new Error("Request Failed");
+            }  else {
+                const data = await response.json();
+                applyData(data);
             }
 
-            const data = await response.json();
-
-            applyData(data);
 
         } catch (error) {
             throw new Error(error);
