@@ -1,4 +1,4 @@
-import React, { useState, Fragment } from 'react'
+import React, { useState, useEffect, Fragment } from 'react'
 import styles from './OptionForm.module.css'
 
 import Form from "react-bootstrap/Form";
@@ -8,7 +8,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { addDataActions } from "../../store/addData";
 import { modalDataActions } from "../../store/modalData";
 
-import useInsert from "../../hooks/api/menu.js";
+import useInsert, { useUpdate } from "../../hooks/api/menu.js";
 import OptionInput from './Option/OptionInput';
 import config from '../../hooks/config';
 
@@ -16,6 +16,8 @@ export default function OptionForm() {
     const dispatch = useDispatch();
     const data = useSelector((state) => state.addData.optionData);
     const [insert] = useInsert();
+    const { updateTitle } = useUpdate();
+    const [keywordEvent, keywordEventHandler] = useState();
 
 
 
@@ -36,6 +38,26 @@ export default function OptionForm() {
 
 
 
+    function keywordChangeHandler(e) {
+        keywordEventHandler(e);
+    }
+
+    useEffect(() => {
+        const timer = setTimeout(() => {
+            const e = keywordEvent;
+            const text = e.target.value;
+            updateTitle(text);
+
+        }, 500);
+
+        return () => {
+            clearTimeout(timer);
+        }
+
+    }, [keywordEvent])
+
+
+
 
     return (
         <Fragment>
@@ -49,8 +71,18 @@ export default function OptionForm() {
             </Button>
 
 
-
+            <br />
             <Form>
+                <Form.Group className="mb-3" controlId="exampleForm.ControlInput1">
+                    <Form.Label> Title </Form.Label>
+                    <Form.Control
+                        type="text"
+                        placeholder="Ex: What service you want?"
+                        onChange={keywordChangeHandler}
+                        requried
+                    />
+
+                </Form.Group>
                 <OptionInput />
             </Form>
 

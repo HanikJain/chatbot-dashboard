@@ -16,7 +16,8 @@ const optionData = {
         addDisabled: false,
         checked: false,
         optionExists: false,
-        sr_no:'0'
+        sr_no:'0',
+        title: '',
       
     }
     

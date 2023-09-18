@@ -113,7 +113,7 @@ export default function useValidate() {
             const message = "Invalid keyword"
             dispatch(modalDataActions.setShowModal(message));
             return undefined;
-        }
+        } 
 
         const res = validOptionChecker(data.optionData);
         if(res === undefined){
@@ -173,6 +173,13 @@ export default function useValidate() {
                 }
             }
         } else {
+            // validate title
+            if (data.title.trim() === "") {
+                const message = "Invalid Title"
+                dispatch(modalDataActions.setShowModal(message));
+                return undefined;
+            }
+
             if(data.optionExists) {
                 for (let i = 1; i <= data.count; i++) {
                     const res = validOptionChecker(data[i]);

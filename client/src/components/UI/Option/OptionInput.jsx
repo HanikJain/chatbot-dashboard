@@ -22,7 +22,7 @@ export default function OptionInput() {
     const dispatch = useDispatch();
     const [insert] = useInsert();
     const [find] = useFind();
-    const [update] = useUpdate();
+    const { update } = useUpdate();
 
     useEffect(() => {
         const timer = setTimeout(() => {

@@ -131,8 +131,14 @@ export function useUpdate(){
 
     }
 
+    const updateTitle = (text) => {
+        clonedData.title = text;
+        const updatedData = structuredClone(clonedData);
+        dispatch(addDataActions.setAddOption(updatedData))
+    }
+
    
 
 
-    return [update];
+    return {update, updateTitle};
 }
